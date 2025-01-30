@@ -1,0 +1,25 @@
+# @package _global_
+
+debug: true
+
+logs:
+  prefix: logs_debug/${datamodule.dataset_names}
+
+trainer:
+  accelerator: cpu
+  precision: 32
+  max_steps: 100
+  limit_train_batches: 5
+  limit_val_batches: 5
+  limit_test_batches: 5
+  val_check_interval: 40
+
+datamodule:
+  batch_size: 4
+  pin_memory: false
+  num_workers: 0
+  max_length: -1
+  truncation_length: 320
+
+model:
+  model_name: llama-xs

@@ -1,0 +1,4 @@
+_target_: autograph.datamodules.GraphDataset
+root: ./datasets
+dataset_names: MOSES
+labeled_graph: true

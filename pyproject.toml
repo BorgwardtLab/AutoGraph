@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "AutoGraph"
+authors = [
+    {name = "Dexiong Chen", email = "dchen@biochem.mpg.de"},
+]
+description = "An autoregressive graph generative model using decoder-only transformers"
+readme = "README.md"
+requires-python = ">=3.9"
+keywords = ["transformers", "large language models", "graph generation", "random walks", "graph learning"]
+license = {text = "BSD-3-Clause"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+]
+dynamic = ["version"]
+
+[tool.setuptools]
+packages = ["autograph"]

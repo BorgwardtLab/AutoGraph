@@ -1,0 +1,3 @@
+_target_: autograph.datamodules.GraphDataset
+root: ./datasets
+dataset_names: sbm

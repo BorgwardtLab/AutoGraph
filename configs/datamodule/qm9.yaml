@@ -1,0 +1,4 @@
+_target_: autograph.datamodules.GraphDataset
+root: ./datasets
+dataset_names: QM9
+labeled_graph: true

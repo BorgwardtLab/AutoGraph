@@ -1,0 +1,52 @@
+# @package _global_
+defaults:
+  - _self_
+  - datamodule: planar
+  - mode: default
+
+debug: false
+seed: 0
+wandb: false
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+  accelerator: auto
+  precision: bf16-true
+  strategy: auto
+  devices: auto
+  default_root_dir: ${logs.path}
+  num_sanity_val_steps: 0
+
+datamodule:
+  batch_size: 64
+  pin_memory: True
+  num_workers: 0
+  max_length: -1
+  truncation_length: 2048
+
+sampling:
+  num_samples: -1
+  top_k: 10
+  temperature: 1.0
+  max_length: 11000
+  batch_size: ${eval:2 * ${datamodule.batch_size}}
+  motif_num: 1
+
+model:
+  _target_: autograph.models.seq_models.HFSequenceModel
+  model_name: llama-s
+  attention_dropout: 0.0
+  attn_implementation: sdpa
+  pretrained_path: null
+
+logs:
+  prefix: logs/test/${datamodule.dataset_names}/${model.model_name}/${seed}
+  path: ${logs.prefix}/runs/${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+# output directory, generated dynamically on each run
+hydra:
+  run:
+    dir: ${logs.path}
+  sweep:
+    dir: ${logs.prefix}/multiruns/test/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

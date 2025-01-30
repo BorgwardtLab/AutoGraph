@@ -1,0 +1,68 @@
+# @package _global_
+defaults:
+  - _self_
+  - datamodule: planar
+  - experiment: planar
+  - mode: default
+
+debug: false
+seed: 0
+wandb: false
+
+datamodule:
+  batch_size: 128
+  pin_memory: True
+  num_workers: 0
+  max_length: -1
+  truncation_length: 2048
+
+trainer:
+  _target_: pytorch_lightning.Trainer
+  accelerator: auto
+  precision: bf16-true
+  max_steps: 800000
+  val_check_interval: 1000
+  check_val_every_n_epoch: null
+  gradient_clip_val: 1.0
+  strategy: auto
+  devices: auto
+  default_root_dir: ${logs.path}
+  num_sanity_val_steps: 0
+
+sampling:
+  num_samples: -1
+  top_k: 10
+  temperature: 1.0
+  max_length: 2048
+  batch_size: ${datamodule.batch_size}
+
+train:
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 6e-04
+    weight_decay: 0.1
+    betas: [0.9, 0.95]
+  lr_scheduler:
+    _target_: autograph.lr_schedulers.get_cosine_schedule_with_warmup
+    warmup_steps: ${eval:0.01 * ${trainer.max_steps}}
+    max_steps: ${eval:0.9 * ${trainer.max_steps}}
+    min_factor: 0.1
+
+model:
+  _target_: autograph.models.seq_models.HFSequenceModel
+  model_name: llama-s
+  attention_dropout: 0.0
+  attn_implementation: sdpa
+  pretrained_path: null
+
+logs:
+  prefix: logs/train/${datamodule.dataset_names}/${model.model_name}/${seed}
+  path: ${logs.prefix}/runs/${now:%Y-%m-%d}_${now:%H-%M-%S}
+
+# output directory, generated dynamically on each run
+hydra:
+  run:
+    dir: ${logs.path}
+  sweep:
+    dir: ${logs.prefix}/multiruns/train/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

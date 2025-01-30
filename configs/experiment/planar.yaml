@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: planar
+
+trainer:
+  max_steps: 200000
+  val_check_interval: 100
+
+model:
+  model_name: llama2-s
+  attention_dropout: 0.5
