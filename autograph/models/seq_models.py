@@ -36,18 +36,6 @@ class SequenceModel(pl.LightningModule):
         self.instantiate_metrics()
         self.save_hyperparameters()
 
-    # def set_lora(self):
-    #     if not self.cfg.model.use_lora:
-    #         return
-    #     self.model.set_lora(self.cfg.lora)
-
-    # def load_lora(self):
-    #     if self.cfg.model.use_lora and self.cfg.model.lora_path is not None:
-    #         if osp.isfile(self.cfg.model.lora_path):
-    #             self.cfg.model.lora_path = osp.dirname(self.cfg.model.lora_path)
-    #         print(f"Loading Lora weights from {self.cfg.model.lora_path}")
-    #         self.model.load_lora(self.cfg.model.lora_path)
-
     def save_pretrained(self, save_directory, **kwargs):
         self.model.model.save_pretrained(save_directory, **kwargs)
 
@@ -66,8 +54,6 @@ class SequenceModel(pl.LightningModule):
         self.loss_fn = nn.CrossEntropyLoss(ignore_index=self.tokenizer.pad)
 
     def instantiate_metrics(self):
-        # only evaluate on planar for now
-        # assert 'planar' in self._datamodule.dataset_names
         dataset = hydra.utils.instantiate(
             self.cfg.datamodule, init_tokenizer=False
         )
@@ -170,7 +156,6 @@ class SequenceModel(pl.LightningModule):
         return graphs, total_time
 
     def configure_optimizers(self):
-        # optimizer = hydra.utils.instantiate(self.cfg.train.optimizer, self.model.parameters())
         optimizer = hydra.utils.instantiate(
             self.cfg.train.optimizer, filter(lambda x: x.requires_grad, self.model.parameters())
         )
@@ -277,17 +262,6 @@ class HFSequenceModel(nn.Module):
             **vocab_params, **model_size_params, **model_params, **kwargs
         ))
 
-    # def set_lora(self, cfg):
-    #     from peft import LoraConfig, get_peft_model
-    #     lora_config = hydra.utils.instantiate(cfg, task_type="CAUSAL_LM")
-    #     self.model = get_peft_model(self.model, lora_config)
-    #     self.model.print_trainable_parameters()
-
-    # def load_lora(self, lora_path):
-    #     from peft import PeftModel
-    #     self.model = PeftModel.from_pretrained(self.model, lora_path)
-    #     self.model.print_trainable_parameters()
-
     def forward(self, input_ids):
         return self.model(input_ids=input_ids).logits
 
@@ -302,9 +276,6 @@ class HFSequenceModel(nn.Module):
         batch_size = input_ids.shape[0]
         max_length = self.max_length if max_length is None else max_length
 
-        # logits_processor = LogitsProcessorList([
-        #     RemoveSelfLoop(self.tokenizer.pad),
-        # ])
         logits_processor = None
         if self.tokenizer.labeled_graph:
             logits_processor = LogitsProcessorList([
@@ -323,15 +294,6 @@ class HFSequenceModel(nn.Module):
             edge_index = self.tokenizer.decode(walk_idx[i])
             edge_index_list.append(edge_index)
         return edge_index_list
-
-
-class RemoveSelfLoop(LogitsProcessor):
-    def __init__(self, pad_idx):
-        self.pad_idx = pad_idx
-
-    def __call__(self, input_ids, scores):
-        new_scores = torch.scatter(scores, 1, input_ids[:, -1:], float('-inf'))
-        return torch.where(input_ids[:, -1:] == self.pad_idx, scores, new_scores)
 
 
 class LabeledGraph(LogitsProcessor):
@@ -359,7 +321,6 @@ class LabeledGraph(LogitsProcessor):
         scores_idx = torch.where(self.idx, scores, float('-inf'))
         scores_node_idx = torch.where(self.node_idx, scores, float('-inf'))
         scores_edge_idx = torch.where(self.edge_idx, scores, float('-inf'))
-        # scores_edge_or_special_idx = torch.where(self.edge_idx | self.special_idx, scores, float('-inf'))
 
         scores = torch.where(self.idx[sampled_idx] & (~self.start_bracket), scores_node_idx, scores)
         scores = torch.where(
