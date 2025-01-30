@@ -1,15 +1,19 @@
 # @package _global_
 
 defaults:
-  - override /datamodule: protein
+  - override /datamodule: networkx_big
 
 datamodule:
   batch_size: 64
-  truncation_length: 1536
+  num_workers: 8
 
 trainer:
-  max_steps: 200000
+  max_steps: 400000
   val_check_interval: 1000
+
+sampling:
+  num_samples: 128
+  top_k: 100
 
 model:
   model_name: llama2-s

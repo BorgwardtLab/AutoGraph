@@ -1,0 +1,20 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: qm9
+
+datamodule:
+  batch_size: 512
+  num_workers: 8
+
+trainer:
+  max_steps: 100000
+  val_check_interval: 1000
+
+sampling:
+  num_samples: 512
+  max_length: 500
+
+model:
+  model_name: llama-s
+  attention_dropout: 0.5

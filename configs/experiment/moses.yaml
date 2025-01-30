@@ -1,0 +1,19 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: moses
+
+datamodule:
+  batch_size: 512
+  num_workers: 8
+
+trainer:
+  max_steps: 400000
+  val_check_interval: 1000
+
+sampling:
+  num_samples: 512
+
+model:
+  model_name: llama-s
+  attention_dropout: 0.5

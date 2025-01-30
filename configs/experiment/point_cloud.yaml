@@ -1,15 +1,14 @@
 # @package _global_
 
 defaults:
-  - override /datamodule: protein
+  - override /datamodule: point_cloud
 
 datamodule:
   batch_size: 64
-  truncation_length: 1536
 
 trainer:
   max_steps: 200000
   val_check_interval: 1000
 
 model:
-  model_name: llama2-s
+  model_name: llama-s
