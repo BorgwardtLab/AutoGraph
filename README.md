@@ -10,16 +10,16 @@ This repository implements AutoGraph presented in the following paper:
 >Dexiong Chen, Markus Krimmel, and Karsten Borgwardt.
 [Flatten Graphs as Sequences: Transformers are Scalable Graph Generators][1], Preprint 2025.
 
-**TL;DR**: A novel autoregressive framework that uses decoder-only transformers to generate large attributed graphs.
+**TL;DR**: A novel autoregressive framework for generating large attributed graphs using decoder-only transformers
 
 ## Overview
 
-At the core of AutoGraph is a reversible "flattening" process that transforms graphs into random sequences. By sampling and learning from these sequences, AutoGraph enables transformers or any language models to model and generate complex graph structures in a manner akin to natural language. The sequence sampling complexity and length scale linearly with the number of edges, making AutoGraph highly scalable for generating large sparse graphs. Empirically, it achieves state-of-the-art performance across diverse synthetic and molecular graph generation benchmarks, while delivering a 100-fold generation and a 3-fold training speedup compared to leading diffusion models. Furthermore, it demonstrates promising transfer capabilities and supports substructure-conditioned generation without additional fine-tuning. 
+At the core of AutoGraph is a reversible "flattening" process that transforms graphs into random sequences. By sampling and learning from these sequences, AutoGraph enables transformers or any language models to model and generate complex graph structures __in a manner akin to natural language__. The sampling complexity and sequence length scale linearly with the number of edges, making AutoGraph highly scalable for generating large sparse graphs. Empirically, AutoGraph achieves state-of-the-art performance across diverse synthetic and molecular graph generation benchmarks, while delivering a 100-fold generation and a 3-fold training speedup compared to leading diffusion models. Additionally, it demonstrates promising transfer capabilities and supports substructure-conditioned generation without additional fine-tuning. 
 
-The flattening process rely on sampling a sequence of random trail segments with neighborhood information (i.e. a SENT), by traversing the graph through a strategy similar to depth-first search. More details can be found in Algorithm 1 in our [paper][1]. The obtained sequence is then tokenized into a sequence of tokens which can be modeled effectively with a transformer.
+The flattening process relies on sampling a sequence of random trail segments with neighborhood information (i.e. a SENT), by traversing the graph through a strategy similar to depth-first search. More details can be found in Algorithm 1 in our [paper][1]. The obtained sequence is then tokenized into a sequence of tokens which can be modeled effectively with a transformer.
 
 <p align="center">
-  <img width="80%" src="images/overview.png">
+  <img width="95%" src="images/overview.png">
 </p>
 
 ## Installation
@@ -37,9 +37,9 @@ pip install -e .
 
 Coming soon!
 
-## Model Training
+## Model Running
 
-All configurations for the experiments are managed by [hydra](https://hydra.cc/), stored in `./config`.
+The configurations for all experiments are managed by [hydra](https://hydra.cc/), stored in `./config`.
 
 Below you can find the list of experiments conducted in the paper:
 
@@ -48,9 +48,21 @@ Below you can find the list of experiments conducted in the paper:
 - Molecular graph datasets: [QM9](https://arxiv.org/abs/1703.00564), [MOSES](https://github.com/molecularsets/moses), and [GuacaMol](https://github.com/BenevolentAI/guacamol).
 - Our pre-training dataset (unattributed graphs): NetworkX, which is based on graph generators from [NetworkX](https://networkx.org/documentation/stable/reference/generators.html).
 
+### Pre-trained Model Evaluation
+
+```bash
+# You can replace planar with any of the above datasets
+dataset=planar # can be sbm, protein, point_cloud, qm9, moses, guacamol, networkx
+pretrained_path=${path_to_the_downloaded_model}
+python test.py model.pretrained_path=${pretrained_path} experiment=${dataset}
+```
+
+### Supervised Training
+
 ```bash
 # You can replace planar with any of the above datasets
 python train.py experiment=planar # can be sbm, protein, point_cloud, qm9, moses, guacamol, networkx
 ```
 
 
+[1]: https://arxiv.org/abs/2502.02216
