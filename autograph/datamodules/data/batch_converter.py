@@ -27,7 +27,6 @@ class BatchConverter(object):
             if self.truncation_length is not None and self.truncation_length < len(x):
                 start_idx = torch.randint(0, len(x) - self.truncation_length, (1,)).item()
                 x = x[start_idx:start_idx + self.truncation_length]
-                # x = x[:self.truncation_length]
             batched_tensor[i, :len(x)] = x
 
         return batched_tensor

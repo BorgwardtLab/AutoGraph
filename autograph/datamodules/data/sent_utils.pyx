@@ -34,7 +34,7 @@ cdef inline uint32_t rand_int(uint32_t end, uint32_t* random_state) nogil:
     """Generate a random integer in [0; end)."""
     return our_rand_r(random_state) % end
 
-cdef void sort_array(int64_t[::1] arr, int size) nogil:
+cdef int sort_array(int64_t[::1] arr, int size) nogil:
     sort(&arr[0], (&arr[0]) + size)
 
 
@@ -48,6 +48,8 @@ def sample_sent(
     bint undirected=True,
     object rng=None
 ):
+    """Sample a SENT from an unattributed graph
+    """
     if rng is None:
         rng = np.random.RandomState(0)
 
@@ -154,6 +156,8 @@ def sample_labeled_sent(
     bint undirected=True,
     object rng=None
 ):
+    """Sample a SENT from an attributed graph
+    """
     if rng is None:
         rng = np.random.RandomState(0)
 
@@ -272,6 +276,8 @@ def reconstruct_graph_from_sent(
     int left_bracket,
     int right_bracket,
 ):
+    """Reconstruct the graph from a SENT
+    """
     cdef:
         int i
         int walk_length = sent_seq.shape[0]
@@ -314,6 +320,8 @@ def reconstruct_graph_from_labeled_sent(
     int right_bracket,
     int idx_offset=0,
 ):
+    """Reconstruct the graph from a labeled SENT
+    """
     cdef:
         int i = 0
         int walk_length = sent_seq.shape[0]

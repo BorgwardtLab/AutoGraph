@@ -86,8 +86,6 @@ class GraphDataset(pl.LightningDataModule):
             self.dataset_names = ['ER', 'BA', 'waxman', 'random_geo']
         elif dataset_names == 'networkx':
             self.dataset_names = ['classic', 'lattice', 'small', 'random', 'geometric']
-        elif dataset_names == 'networkx_all':
-            self.dataset_names = ['classic', 'lattice', 'small', 'random', 'geometric', 'tree', 'community']
         elif dataset_names == 'networkx_big':
             self.dataset_names = ['classic_big', 'lattice_big', 'small_big', 'random_big', 'geometric_big', 'tree_big', 'community_big']
         elif dataset_names == 'protein':
@@ -231,40 +229,3 @@ class GraphDataset(pl.LightningDataModule):
             collate_fn=self.collate_fn,
             **self.kwargs
         )
-
-
-class PackedDataset(IterableDataset):
-    def __init__(self, dataset, seq_length=2048, shuffle=False, infinite=False):
-        self.dataset = dataset
-        self.seq_length = seq_length
-        self.shuffle = shuffle
-        self.infinite = infinite
-        self.current_size = 0
-        if shuffle:
-            self.iterator = RandomSampler(dataset)
-        else:
-            self.iterator = range(len(dataset))
-
-    def __len__(self):
-        return len(self.dataset)
-
-    def __iter__(self):
-        while True:
-            cur_example = []
-            cur_seqlens = []
-            cur_len = 0
-            for index in self.iterator:
-                cur_seq = self.dataset[index]
-                if cur_len + len(cur_seq) <= self.seq_length:
-                    cur_example.append(cur_seq)
-                    cur_seqlens.append(len(cur_seq))
-                    cur_len += len(cur_seq)
-                else:
-                    cur_example = torch.cat(cur_example)
-                    cur_seqlens = torch.tensor(cur_seq)
-                    self.current_size += 1
-                    yield cur_example
-                    cur_example = []
-                    cur_len = 0
-            if not self.infinite:
-                break
