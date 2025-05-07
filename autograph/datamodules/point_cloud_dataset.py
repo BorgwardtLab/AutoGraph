@@ -24,7 +24,7 @@ class PointCloudDataset(InMemoryDataset):
         max_size = 10000
         pre_filter = lambda data: (data.num_nodes >= min_size) and (data.num_nodes <= max_size)
         super().__init__(root, transform, pre_transform, pre_filter)
-        self.data, self.slices = torch.load(self.processed_paths[0])
+        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
 
     @property
     def raw_file_names(self):

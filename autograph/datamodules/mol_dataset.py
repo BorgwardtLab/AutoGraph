@@ -55,7 +55,7 @@ class QM9Dataset(InMemoryDataset):
         self.split = split
         self.file_idx = file_idx[split]
         super().__init__(root, transform, pre_transform, pre_filter)
-        self.data, self.slices = torch.load(self.processed_paths[0])
+        self.data, self.slices = torch.load(self.processed_paths[0], weights_only=False)
 
     @property
     def raw_file_names(self):
