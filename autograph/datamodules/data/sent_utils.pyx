@@ -60,8 +60,12 @@ def sample_sent(
         int num_edges = indices.shape[0]
 
     if seq_length < 0:
-        seq_length = max(num_edges, 10) * 2
-
+        if num_nodes == 0 or num_nodes == 1:
+            seq_length = 20
+        else:
+            initial_node_tokens_s = 1
+            max_tokens_per_step_s = num_nodes + 3
+            seq_length = (num_edges + num_nodes) * 2
     cdef:
         uint32_t rand_r_state_seed = rng.randint(0, RAND_R_MAX)
         uint32_t* rand_r_state = &rand_r_state_seed
@@ -166,9 +170,14 @@ def sample_labeled_sent(
         int[:] indptr = csr_matrix.indptr
         int num_nodes = csr_matrix.shape[0]
         int num_edges = indices.shape[0]
+        int num_node_features = node_labels.shape[1]
+        int num_edge_features = edge_labels.shape[1]
 
     if seq_length < 0:
-        seq_length = max(num_edges, 10) * 4
+        if num_nodes == 0 or num_nodes == 1:
+            seq_length = 20
+        else:
+            seq_length = 2 * (num_nodes * (1 + num_node_features) + num_edges * (1 + num_edge_features))
 
     cdef:
         uint32_t rand_r_state_seed = rng.randint(0, RAND_R_MAX)
