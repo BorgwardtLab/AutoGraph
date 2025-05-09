@@ -3,7 +3,7 @@ import numpy as np
 from torch_geometric import utils
 import pyximport
 
-pyximport.install(setup_args={"include_dirs": np.get_include()})
+pyximport.install(setup_args={"include_dirs": np.get_include()}, inplace=True)
 from .sent_utils import (
     sample_sent,
     sample_labeled_sent,
