@@ -30,6 +30,7 @@ We recommend the users to manage dependencies using [miniconda](https://docs.con
 # Replace micromamba with conda if you use conda or miniconda
 micromamba env create -f environment.yaml 
 micromamba activate autograph
+cd autograph/evaluation/orca; g++ -O2 -std=c++11 -o orca orca.cpp; cd ../../..
 pip install -e .
 ```
 
