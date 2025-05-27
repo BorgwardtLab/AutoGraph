@@ -4,6 +4,7 @@ import hydra
 from pyprojroot import here
 import numpy as np
 
+import graph_tool
 import torch
 import pytorch_lightning as pl
 from omegaconf import OmegaConf

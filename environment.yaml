@@ -1,0 +1,24 @@
+name: autograph
+channels:
+  - conda-forge
+dependencies:
+  - python>=3.9
+  - pip
+  - numpy
+  - scipy
+  - rdkit=2024.03.6
+  - graph-tool=2.68
+  - networkx
+  - pip:
+    - torch==2.6.0
+    - torch_geometric
+    - hydra-core
+    - lightning
+    - transformers
+    - cython
+    - matplotlib
+    - pyprojroot
+    - pyemd==1.0.0
+    - PyGSP==0.5.1
+    - joblib
+    - wandb
