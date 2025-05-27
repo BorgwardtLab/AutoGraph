@@ -10,7 +10,7 @@ dependencies:
   - graph-tool=2.68
   - networkx
   - pip:
-    - torch==2.6.0
+    - torch==2.2.2
     - torch_geometric
     - hydra-core
     - lightning
