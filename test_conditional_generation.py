@@ -23,7 +23,7 @@ OmegaConf.register_new_resolver('eval', eval)
 log = logging.getLogger(__name__)
 
 @hydra.main(
-    version_base="1.3", config_path=str(here() / "graphllm" / "configs"), config_name="test"
+    version_base="1.3", config_path=str(here() / "configs"), config_name="test"
 )
 def main(cfg):
     log.info(f"Configs:\n{OmegaConf.to_yaml(cfg)}")
