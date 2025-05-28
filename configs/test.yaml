@@ -2,6 +2,7 @@
 defaults:
   - _self_
   - datamodule: planar
+  - experiment: test_planar
   - mode: default
 
 debug: false

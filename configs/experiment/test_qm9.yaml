@@ -1,0 +1,15 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: qm9
+
+datamodule:
+  batch_size: 512
+
+sampling:
+  top_k: 5
+  max_length: 500
+
+model:
+  model_name: llama-s
+  pretrained_path: pretrained_models/train/qm9.ckpt

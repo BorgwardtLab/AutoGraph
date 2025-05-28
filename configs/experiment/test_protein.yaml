@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: protein
+
+sampling:
+  top_k: 40
+
+model:
+  model_name: llama-s
+  pretrained_path: pretrained_models/train/protein.ckpt

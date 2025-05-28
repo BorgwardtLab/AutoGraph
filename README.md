@@ -49,7 +49,7 @@ pip install -e .
 
 ## Model Downloads
 
-Coming soon!
+You can download all the pretrained models [here](https://datashare.biochem.mpg.de/s/51FI1NTx2k75pfH) and unzip it to `./pretrained_models`.
 
 ## Model Running
 
@@ -68,7 +68,7 @@ Below you can find the list of experiments conducted in the paper:
 # You can replace planar with any of the above datasets
 dataset=planar # can be sbm, protein, point_cloud, qm9, moses, guacamol, networkx
 pretrained_path=${path_to_the_downloaded_model}
-python test.py model.pretrained_path=${pretrained_path} experiment=${dataset}
+python test.py model.pretrained_path=${pretrained_path} experiment=test_${dataset}
 ```
 
 ### Supervised Training

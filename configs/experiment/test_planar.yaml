@@ -1,0 +1,11 @@
+# @package _global_
+
+defaults:
+  - override /datamodule: planar
+
+sampling:
+  top_k: 10
+
+model:
+  model_name: llama-s
+  pretrained_path: pretrained_models/train/planar.ckpt
