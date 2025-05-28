@@ -16,11 +16,11 @@ This repository implements AutoGraph presented in the following paper:
 <table style="width: 80%">
   <tr>
     <td align="center"><b>Unconditional generation</b></td>
-    <td align="center"><b>Conditional generation</b></td>
+    <td align="center"><b>Substructure-Conditioned generation</b></td>
   </tr>
   <tr>
     <td><img src="images/autograph_unconditional_generation.gif" alt="Unconditional generation" width="100%"/></td>
-    <td><img src="images/autograph_conditional_generation.gif" alt="Conditional generation" width="100%"/></td>
+    <td><img src="images/autograph_conditional_generation.gif" alt="Substructure-conditioned generation" width="100%"/></td>
   </tr>
 </table>
 </div>
