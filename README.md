@@ -10,11 +10,24 @@ This repository implements AutoGraph presented in the following paper:
 >Dexiong Chen, Markus Krimmel, and Karsten Borgwardt.
 [Flatten Graphs as Sequences: Transformers are Scalable Graph Generators][1], Preprint 2025.
 
-**TL;DR**: A novel autoregressive framework for generating large attributed graphs using decoder-only transformers
+**TL;DR**: A scalable autoregressive model for attributed graph generation using decoder-only transformers
+
+<div align="center">
+<table style="width: 80%">
+  <tr>
+    <td align="center"><b>Unconditional generation</b></td>
+    <td align="center"><b>Conditional generation</b></td>
+  </tr>
+  <tr>
+    <td><img src="images/autograph_unconditional_generation.gif" alt="Unconditional generation" width="100%"/></td>
+    <td><img src="images/autograph_conditional_generation.gif" alt="Conditional generation" width="100%"/></td>
+  </tr>
+</table>
+</div>
 
 ## Overview
 
-At the core of AutoGraph is a reversible "flattening" process that transforms graphs into random sequences. By sampling and learning from these sequences, AutoGraph enables transformers or any language models to model and generate complex graph structures __in a manner akin to natural language__. The sampling complexity and sequence length scale linearly with the number of edges, making AutoGraph highly scalable for generating large sparse graphs. Empirically, AutoGraph achieves state-of-the-art performance across diverse synthetic and molecular graph generation benchmarks, while delivering a 100-fold generation and a 3-fold training speedup compared to leading diffusion models. Additionally, it demonstrates promising transfer capabilities and supports substructure-conditioned generation without additional fine-tuning. 
+By flattening graphs into random sequences of tokens through a reversible process, AutoGraph enables modeling graphs as sequences __in a manner akin to natural language__. This results in sampling complexity and sequence lengths that scale optimally linearly with the number of edges, making it scalable and efficient for large, sparse graphs. A key success factor of AutoGraph is that its sequence prefixes represent induced subgraphs, creating a direct link to sub-sentences in language modeling. Empirically, AutoGraph achieves state-of-the-art performance on synthetic and molecular benchmarks, with up to 100x faster generation and 3x faster training than leading diffusion models. It also supports substructure-conditioned generation without fine-tuning and shows promising transferability, bridging language modeling and graph generation to lay the groundwork for graph foundation models.
 
 The flattening process relies on sampling a sequence of random trail segments with neighborhood information (i.e. a SENT), by traversing the graph through a strategy similar to depth-first search. More details can be found in Algorithm 1 in our [paper][1]. The obtained sequence is then tokenized into a sequence of tokens which can be modeled effectively with a transformer.
 
