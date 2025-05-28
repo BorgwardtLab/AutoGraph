@@ -126,7 +126,7 @@ class SequenceModel(pl.LightningModule):
                     self.logger.experiment.log({"sampling/graphs": [wandb.Image(fig_graphs)]})
                 plt.close(fig_graphs)
 
-    def generate(self, num_samples=None, input_ids=None):
+    def generate(self, num_samples=None, input_ids=None, return_sent=False):
         num_samples = self.cfg.sampling.num_samples if num_samples is None else num_samples
         if input_ids is not None and isinstance(input_ids, torch.Tensor):
             num_samples = input_ids.shape[0]
@@ -136,7 +136,7 @@ class SequenceModel(pl.LightningModule):
             batch_size = min(self.cfg.sampling.batch_size, num_samples - i)
             if input_ids is not None and isinstance(input_ids, torch.Tensor):
                 init_walk_idx = input_ids[i:i + batch_size]
-                init_walk_idx.to(self.device)
+                init_walk_idx = init_walk_idx.to(self.device)
             else:
                 init_walk_idx = torch.full(
                     (batch_size, 1), self.tokenizer.sos, dtype=torch.long, device=self.device
@@ -147,6 +147,7 @@ class SequenceModel(pl.LightningModule):
                 top_k=self.cfg.sampling.top_k,
                 temperature=self.cfg.sampling.temperature,
                 max_length=self.cfg.sampling.max_length,
+                return_sent=return_sent,
             )
             toc = timer()
             graphs.extend(graph)
@@ -271,7 +272,8 @@ class HFSequenceModel(nn.Module):
         input_ids,
         top_k=10,
         temperature=1.0,
-        max_length=None
+        max_length=None,
+        return_sent=False,
     ):
         batch_size = input_ids.shape[0]
         max_length = self.max_length if max_length is None else max_length
@@ -291,7 +293,10 @@ class HFSequenceModel(nn.Module):
         )
         edge_index_list = []
         for i in range(batch_size):
-            edge_index = self.tokenizer.decode(walk_idx[i])
+            if return_sent:
+                edge_index = walk_idx[i]
+            else:
+                edge_index = self.tokenizer.decode(walk_idx[i])
             edge_index_list.append(edge_index)
         return edge_index_list
 

@@ -58,7 +58,7 @@ def main(cfg):
         input_ids = model.tokenizer(graph)
         input_ids = input_ids.repeat((batch_size, 1))
         input_ids = input_ids.to(device)
-        graphs, time = model.generate(input_ids=input_ids)
+        graphs, time = model.generate(batch_size, input_ids=input_ids)
         graph_list.extend(graphs)
 
     print(len(graph_list))
