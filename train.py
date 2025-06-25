@@ -40,7 +40,7 @@ def main(cfg):
 
     logger = []
     if cfg.wandb:
-        wandb_logger = pl.loggers.WandbLogger(project="AutoGraph")
+        wandb_logger = pl.loggers.WandbLogger(project="AutoGraph", config=OmegaConf.to_container(cfg, resolve=True))
         logger.append(wandb_logger)
     logger.append(pl.loggers.CSVLogger(cfg.logs.path, name="csv_logs"))
 
