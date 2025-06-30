@@ -139,20 +139,21 @@ class GraphDataset(pl.LightningDataModule):
             train_dataset = self.datasets_map[dataset_name](
                 root=self.root, split='train', pre_transform=partial(add_dataset_name, dataset_name=dataset_name)
             )
-            self.datasets_map[dataset_name](
+            val_dataset = self.datasets_map[dataset_name](
                 root=self.root, split='val', pre_transform=partial(add_dataset_name, dataset_name=dataset_name)
             )
             try:
-                self.datasets_map[dataset_name](
+                test_dataset = self.datasets_map[dataset_name](
                     root=self.root, split='test', pre_transform=partial(add_dataset_name, dataset_name=dataset_name)
                 )
-            except:
-                pass
+            except Exception:
+                test_dataset = None
+
             if self.tokenizer is not None:
-                max_num_nodes[dataset_name] = max([g.num_nodes for g in train_dataset])
+                max_num_nodes[dataset_name] = max([g.num_nodes for g in dataset] for dataset in [train_dataset, val_dataset, test_dataset] if dataset is not None)
         if self.tokenizer is not None:
             self.max_num_nodes = max_num_nodes
-            self.tokenizer.set_num_nodes(max(max_num_nodes.values()))
+            self.tokenizer.set_num_nodes(max(max(max_num_nodes.values())))
             print(self.max_num_nodes)
             if self.labeled_graph:
                 # TODO: suppport multiple molecule datasets
