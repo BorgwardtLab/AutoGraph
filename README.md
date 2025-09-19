@@ -8,7 +8,7 @@
 This repository implements AutoGraph presented in the following paper:
 
 >Dexiong Chen, Markus Krimmel, and Karsten Borgwardt.
-[Flatten Graphs as Sequences: Transformers are Scalable Graph Generators][1], Preprint 2025.
+[Flatten Graphs as Sequences: Transformers are Scalable Graph Generators][1], NeurIPS 2025.
 
 **TL;DR**: A scalable autoregressive model for attributed graph generation using decoder-only transformers
 
@@ -24,6 +24,10 @@ This repository implements AutoGraph presented in the following paper:
   </tr>
 </table>
 </div>
+
+## Updates
+
+- **2025-09-19**: Our codebase and model checkpoints are released.
 
 ## Overview
 
@@ -41,7 +45,7 @@ We recommend the users to manage dependencies using [miniconda](https://docs.con
 
 ```bash
 # Replace micromamba with conda if you use conda or miniconda
-micromamba env create -f environment.yaml 
+micromamba env create -f environment.yaml
 micromamba activate autograph
 cd autograph/evaluation/orca; g++ -O2 -std=c++11 -o orca orca.cpp; cd ../../..
 pip install -e .
@@ -71,7 +75,7 @@ pretrained_path=${path_to_the_downloaded_model}
 python test.py model.pretrained_path=${pretrained_path} experiment=test_${dataset}
 ```
 
-### Supervised Training
+### Training from Scratch
 
 ```bash
 # You can replace planar with any of the above datasets
