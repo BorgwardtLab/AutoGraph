@@ -27,6 +27,7 @@ This repository implements AutoGraph presented in the following paper:
 
 ## Updates
 
+- **2025-10-07**: Our new [PolyGraph benchmark](https://github.com/BorgwardtLab/polygraph-benchmark) has been released, along with a new metric for evaluating graph generation models.
 - **2025-09-19**: Our codebase and model checkpoints are released.
 
 ## Overview
